@@ -10,6 +10,7 @@ export class WelcomeScene extends Phaser.Scene
 
     preload()
     {
+        /* free asset from  https://pixelfrog-assets.itch.io/pixel-adventure-1  */
         this.load.image('blue-bg', 'assets/backgrounds/Blue.png')
 
         /* music acquired from:  https://pixabay.com/sound-effects/interface-124464/  */

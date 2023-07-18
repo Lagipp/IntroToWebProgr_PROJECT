@@ -19,6 +19,7 @@ export class GameOverScene extends Phaser.Scene
 
     preload()
     {
+        /* free asset from  https://pixelfrog-assets.itch.io/pixel-adventure-1  */
         this.load.image('pink-bg', 'assets/backgrounds/Pink.png')
 
         /* music acquired from:  https://pixabay.com/sound-effects/interface-124464/  */

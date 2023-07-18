@@ -9,6 +9,7 @@ const gameOptions =
     playerGravity: 1000,
     cherriesVelocity: -300,
     melonsVelocity: -225,
+    enemiesVelocity: -200,
 }
 
 window.onload = function() 
@@ -63,27 +64,33 @@ class PlayGame extends Phaser.Scene
 
     preload() 
     {
-        // made by me using:  https://www.pixilart.com/draw 
+        /* made by me using:  https://www.pixilart.com/draw   */
 
-        this.load.image('pipe_body_2', 'assets/sprites/pipe_body_2.png')
-        this.load.image('pipe_bot_2', 'assets/sprites/pipe_bottom_2.png')
-        this.load.image('pipe_top_2', 'assets/sprites/pipe_top_2.png')
+        this.load.image('pipe_body', 'assets/sprites/pipe_body.png')
+        this.load.image('pipe_bot', 'assets/sprites/pipe_bottom.png')
+        this.load.image('pipe_top', 'assets/sprites/pipe_top.png')
+        this.load.image('time', 'assets/sprites/time.png')
 
-
-        // free assets acquired from:  https://pixelfrog-assets.itch.io/pixel-adventure-1 
-        //                             https://pixelfrog-assets.itch.io/pixel-adventure-2 
-
+        
+        
+        /* free assets acquired from:  https://pixelfrog-assets.itch.io/pixel-adventure-1 
+        /                              https://pixelfrog-assets.itch.io/pixel-adventure-2  */
+        
         this.load.spritesheet('player', 'assets/sprites/bird.png',   { frameWidth: 32, frameHeight: 32 } )
         this.load.spritesheet('cherry', 'assets/sprites/cherry.png', { frameWidth: 32, frameHeight: 32 } )
         this.load.spritesheet('melon', 'assets/sprites/melon.png',   { frameWidth: 32, frameHeight: 32 } )
+        this.load.image('enemy', 'assets/sprites/enemy.png')
 
         this.load.image('blue-bg', 'assets/backgrounds/Blue.png')
-        this.load.image('gray-bg', 'assets/backgrounds/Gray.png')
         this.load.image('pink-bg', 'assets/backgrounds/Pink.png')
-        this.load.image('purple-bg', 'assets/backgrounds/Purple.png')
-        this.load.image('yellow-bg', 'assets/backgrounds/Yellow.png')
         this.load.image('green-bg', 'assets/backgrounds/Green.png')
-        this.load.image('brown-bg', 'assets/backgrounds/Brown.png')
+
+        // this.load.image('gray-bg', 'assets/backgrounds/Gray.png')
+        // this.load.image('purple-bg', 'assets/backgrounds/Purple.png')
+        // this.load.image('yellow-bg', 'assets/backgrounds/Yellow.png')
+        // this.load.image('brown-bg', 'assets/backgrounds/Brown.png')
+
+
 
 
         /* music acquired from:  https://pixabay.com/sound-effects/swoosh-sound-effect-for-fight-scenes-or-transitions-2-149890/ */
@@ -145,16 +152,19 @@ class PlayGame extends Phaser.Scene
     
         this.cherriesGroup = this.physics.add.group( {} )
         this.melonsGroup = this.physics.add.group( {} )
+        this.enemiesGroup = this.physics.add.group( {} )
 
         this.physics.add.overlap(this.player, this.cherriesGroup, this.collectCherry, null, this)
         this.physics.add.overlap(this.player, this.melonsGroup, this.collectMelon, null, this)
         this.physics.add.overlap(this.player, this.pipesGroup, this.changeToGameOverScene, null, this)
+        this.physics.add.overlap(this.player, this.enemiesGroup, this.changeToGameOverScene, null, this)
 
-        this.add.image(16, 16, "melon")
-        this.scoreText = this.add.text(32, 4, "0", {fontSize: "30px", fill: "ffffff"})
+        this.add.image(20, 20, "time")
+        this.scoreText = this.add.text(38, 6, "0", {fontSize: "30px", fill: "ffffff"})
 
-        this.add.image(80, 16, "cherry")
-        this.itemScoreText = this.add.text(96, 4, "0", {fontSize: "30px", fill: "ffffff"})
+        this.add.image(98, 21, 'melon').setAngle(-55)
+        this.add.image(87, 19, "cherry")
+        this.itemScoreText = this.add.text(114, 6, "0", {fontSize: "30px", fill: "ffffff"})
 
         this.cursors = this.input.keyboard.createCursorKeys()
 
@@ -182,9 +192,9 @@ class PlayGame extends Phaser.Scene
     /* creating a single pipe element */
     createPipe(x, y, piece)
     {
-        let pipe =    piece === 'body' ? this.physics.add.sprite(x, y, 'pipe_body_2')
-                    : piece === 'top'  ? this.physics.add.sprite(x, y, 'pipe_top_2')
-                    : piece === 'bot'  ? this.physics.add.sprite(x, y, 'pipe_bot_2')
+        let pipe =    piece === 'body' ? this.physics.add.sprite(x, y, 'pipe_body')
+                    : piece === 'top'  ? this.physics.add.sprite(x, y, 'pipe_top')
+                    : piece === 'bot'  ? this.physics.add.sprite(x, y, 'pipe_bot')
                     : ''
 
         this.pipesGroup.add( pipe )
@@ -260,6 +270,28 @@ class PlayGame extends Phaser.Scene
         {
             this.melonsGroup.create(game.config.width, Phaser.Math.Between(125, 475), "melon")
             this.melonsGroup.setVelocityX( gameOptions.melonsVelocity )
+        }
+
+
+        /* starting spawning enemies when score reaches 10 */
+        if(this.score > 10)
+        {
+            if(Phaser.Math.Between(0, 2) === 1)
+            {
+                this.enemiesGroup.create(Phaser.Math.Between(400, 780), game.config.height, "enemy")
+                // this.enemiesGroup.setVelocityX( gameOptions.enemiesVelocity - Phaser.Math.Between(50, 100))
+                // this.enemiesGroup.setVelocityY( gameOptions.enemiesVelocity - Phaser.Math.Between(30, 60))
+                this.enemiesGroup.setVelocityX( gameOptions.enemiesVelocity * Phaser.Math.Between(0.5, 2))
+                this.enemiesGroup.setVelocityY( gameOptions.enemiesVelocity * Phaser.Math.Between(0.8, 1.5))
+            }   // width 800, height 600
+            else if (Phaser.Math.Between(0, 2) === 2)
+            {
+                this.enemiesGroup.create(Phaser.Math.Between(400, 780), 0, "enemy")
+                // this.enemiesGroup.setVelocityX( gameOptions.enemiesVelocity - Phaser.Math.Between(50, 100))
+                // this.enemiesGroup.setVelocityY( -gameOptions.enemiesVelocity + Phaser.Math.Between(20, 50))
+                this.enemiesGroup.setVelocityX( gameOptions.enemiesVelocity * Phaser.Math.Between(0.5, 2))
+                this.enemiesGroup.setVelocityY( -gameOptions.enemiesVelocity * Phaser.Math.Between(0.8, 1.5))
+            }
         }
         
     }
