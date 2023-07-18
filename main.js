@@ -80,17 +80,9 @@ class PlayGame extends Phaser.Scene
         this.load.spritesheet('cherry', 'assets/sprites/cherry.png', { frameWidth: 32, frameHeight: 32 } )
         this.load.spritesheet('melon', 'assets/sprites/melon.png',   { frameWidth: 32, frameHeight: 32 } )
         this.load.image('enemy', 'assets/sprites/enemy.png')
-
         this.load.image('blue-bg', 'assets/backgrounds/Blue.png')
         this.load.image('pink-bg', 'assets/backgrounds/Pink.png')
         this.load.image('green-bg', 'assets/backgrounds/Green.png')
-
-        // this.load.image('gray-bg', 'assets/backgrounds/Gray.png')
-        // this.load.image('purple-bg', 'assets/backgrounds/Purple.png')
-        // this.load.image('yellow-bg', 'assets/backgrounds/Yellow.png')
-        // this.load.image('brown-bg', 'assets/backgrounds/Brown.png')
-
-
 
 
         /* music acquired from:  https://pixabay.com/sound-effects/swoosh-sound-effect-for-fight-scenes-or-transitions-2-149890/ */
@@ -279,16 +271,12 @@ class PlayGame extends Phaser.Scene
             if(Phaser.Math.Between(0, 2) === 1)
             {
                 this.enemiesGroup.create(Phaser.Math.Between(400, 780), game.config.height, "enemy")
-                // this.enemiesGroup.setVelocityX( gameOptions.enemiesVelocity - Phaser.Math.Between(50, 100))
-                // this.enemiesGroup.setVelocityY( gameOptions.enemiesVelocity - Phaser.Math.Between(30, 60))
                 this.enemiesGroup.setVelocityX( gameOptions.enemiesVelocity * Phaser.Math.Between(0.5, 2))
                 this.enemiesGroup.setVelocityY( gameOptions.enemiesVelocity * Phaser.Math.Between(0.8, 1.5))
-            }   // width 800, height 600
+            }
             else if (Phaser.Math.Between(0, 2) === 2)
             {
                 this.enemiesGroup.create(Phaser.Math.Between(400, 780), 0, "enemy")
-                // this.enemiesGroup.setVelocityX( gameOptions.enemiesVelocity - Phaser.Math.Between(50, 100))
-                // this.enemiesGroup.setVelocityY( -gameOptions.enemiesVelocity + Phaser.Math.Between(20, 50))
                 this.enemiesGroup.setVelocityX( gameOptions.enemiesVelocity * Phaser.Math.Between(0.5, 2))
                 this.enemiesGroup.setVelocityY( -gameOptions.enemiesVelocity * Phaser.Math.Between(0.8, 1.5))
             }
@@ -352,17 +340,5 @@ class PlayGame extends Phaser.Scene
         else if(this.score >= 10) { this.pipeVelocity = -300 }
 
     }
-
-
-    /*  https://www.html5gamedevs.com/topic/35715-resetting-a-scene/  */
-    // restartGame()
-    // {
-    //     this.score = 0;
-    //     this.collectablesScore = 0
-    //     this.delay = 2000
-    //     this.gap = 3 
-    //     this.pipeVelocity = -200
-    //     this.scene.start("PlayGame")
-    // }
 
 }
