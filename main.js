@@ -51,20 +51,24 @@ class PlayGame extends Phaser.Scene
         this.delay = 2000
         this.gap = 3
         this.pipeVelocity = -200
+
+        this.highScore = 0
     }
 
-    init()
+    init(params)
     {
         this.score = 0
         this.collectablesScore = 0
         this.delay = 2000
         this.gap = 3
         this.pipeVelocity = -200
+
+        this.highScore = params.highScore || 0
     }
 
     preload() 
     {
-        /* made by me using:  https://www.pixilart.com/draw   */
+        /* assets made by me using:  https://www.pixilart.com/draw   */
 
         this.load.image('pipe_body', 'assets/sprites/pipe_body.png')
         this.load.image('pipe_bot', 'assets/sprites/pipe_bottom.png')
@@ -73,8 +77,8 @@ class PlayGame extends Phaser.Scene
 
         
         
-        /* free assets acquired from:  https://pixelfrog-assets.itch.io/pixel-adventure-1 
-        /                              https://pixelfrog-assets.itch.io/pixel-adventure-2  */
+        /* model assets and backgrounds acquired from:  https://pixelfrog-assets.itch.io/pixel-adventure-1 
+        /                                               https://pixelfrog-assets.itch.io/pixel-adventure-2  */
         
         this.load.spritesheet('player', 'assets/sprites/bird.png',   { frameWidth: 32, frameHeight: 32 } )
         this.load.spritesheet('cherry', 'assets/sprites/cherry.png', { frameWidth: 32, frameHeight: 32 } )
@@ -83,6 +87,10 @@ class PlayGame extends Phaser.Scene
         this.load.image('blue-bg', 'assets/backgrounds/Blue.png')
         this.load.image('pink-bg', 'assets/backgrounds/Pink.png')
         this.load.image('green-bg', 'assets/backgrounds/Green.png')
+
+    
+        /* trophy asset acquired from:  https://vsioneithr.itch.io/trophy-cups-pixel-pack */
+        this.load.image('trophy', 'assets/sprites/trophy.png')
 
 
         /* music acquired from:  https://pixabay.com/sound-effects/swoosh-sound-effect-for-fight-scenes-or-transitions-2-149890/ */
@@ -154,9 +162,17 @@ class PlayGame extends Phaser.Scene
         this.add.image(20, 20, "time")
         this.scoreText = this.add.text(38, 6, "0", {fontSize: "30px", fill: "ffffff"})
 
-        this.add.image(98, 21, 'melon').setAngle(-55)
-        this.add.image(87, 19, "cherry")
-        this.itemScoreText = this.add.text(114, 6, "0", {fontSize: "30px", fill: "ffffff"})
+        this.add.image(105, 21, 'melon').setAngle(-55)
+        this.add.image(95, 19, "cherry")
+        this.itemScoreText = this.add.text(117, 6, "0", {fontSize: "30px", fill: "ffffff"})
+
+        console.log(`dbg: current highScore = ${this.highScore}`)
+        if(this.highScore > 0)
+        {
+            this.add.image(175, 20, 'trophy')
+            this.highScoreText = this.add.text(190, 6, `${this.highScore}`, { fontSize: "30px", fill: "ffffff" })
+        }
+
 
         this.cursors = this.input.keyboard.createCursorKeys()
 
@@ -310,7 +326,7 @@ class PlayGame extends Phaser.Scene
     {
         this.bgMusic.stop()
         this.windowsErrorSound.play({ volume: 0.3 })
-        this.scene.start("GameOverScene", { score: this.score, collectables: this.collectablesScore })
+        this.scene.start("GameOverScene", { score: this.score, collectables: this.collectablesScore, highScore: this.highScore })
     }
     
 

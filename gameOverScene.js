@@ -15,6 +15,7 @@ export class GameOverScene extends Phaser.Scene
     {
         this.score = params.score
         this.collectables = params.collectables
+        this.highScore = params.highScore
     }
 
     preload()
@@ -44,11 +45,15 @@ export class GameOverScene extends Phaser.Scene
         let hintText = "Press 'Mouse 1' to restart"
         this.hint = this.add.text(280, 320, hintText, { font: '24px Arial Bold', fill: 'white' })
 
+
+        if(totalScore > this.highScore) this.highScore = totalScore
+
         this.input.on('pointerdown', function () 
         { 
             console.log(`gameover: pointer clicked`)
             this.confirmSound.play({ loop: false, volume: 0.15 })
-            this.scene.start("WelcomeScene")
+            // this.scene.start("WelcomeScene")
+            this.scene.start("PlayGame", { highScore: this.highScore })
         }, this)
     }
 }
